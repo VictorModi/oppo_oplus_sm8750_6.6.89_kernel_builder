@@ -79,6 +79,11 @@ on:
         required: true
         type: boolean
         default: 'false'
+      hymofs:
+        description: 'HymoFS?'
+        required: true
+        type: boolean
+        default: 'false'
       kernel_suffix:
         description: '内核后缀(留空默认,开头别加连字符,勿加空格等影响指令运行的保留字符)'
         required: false
@@ -568,6 +573,29 @@ jobs:
           sed -i 's/hooks.o //g' "./selinux/Makefile"
           cat "./baseband-guard/sepatch.txt" >> "./selinux/Makefile"
 
+      - name: HymoFS
+        if: inputs.hymofs
+        env:
+          SUSFS_ENABLE: ${{ github.event.inputs.susfs_enable }}
+        run: |
+          set -e
+          echo "Applying HymoFS patch..."
+          cd kernel_workspace
+          PATCH_FILE="hymofs.patch"
+          if [ "$SUSFS_ENABLE" = "true" ]; then
+            echo "Using HymoFS patch with SUSFS"
+            wget -q -O "$PATCH_FILE" \
+              https://raw.githubusercontent.com/Anatdx/HymoFS/refs/heads/main/patch/hymofs_with_susfs.patch
+          else
+            echo "Using HymoFS patch without SUSFS"
+            wget -q -O "$PATCH_FILE" \
+              https://raw.githubusercontent.com/Anatdx/HymoFS/refs/heads/main/patch/susfs.patch
+          fi
+          patch -p1 -F 3 < "$PATCH_FILE"
+          grep -q '^CONFIG_HYMOFS=y$' common/arch/arm64/configs/gki_defconfig || \
+            echo 'CONFIG_HYMOFS=y' >> common/arch/arm64/configs/gki_defconfig
+
+          
       - name: 添加制作名称
         run: |
           cd kernel_workspace
@@ -789,6 +817,7 @@ jobs:
             - ADIOS IO调度器支持：${{ github.event.inputs.adios_enable }}
             - Re-Kernel支持：${{ github.event.inputs.rekernel_enable }}
             - 内核级基带保护支持：${{ github.event.inputs.baseband_guard }}
+            - HymoFS: ${{ github.event.inputs.hymofs }}
             - SukiSU Ultra管理器下载：[SukiSU-Ultra](https://github.com/SukiSU-Ultra/SukiSU-Ultra/releases)
             - KernelSU Next管理器下载：[KernelSU-Next](https://github.com/KernelSU-Next/KernelSU-Next/releases)
             - MKSU管理器下载：[Magic-KernelSU](https://github.com/5ec1cff/KernelSU/actions)

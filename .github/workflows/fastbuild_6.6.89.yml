@@ -83,12 +83,12 @@ on:
           - 'builtin'
           - 'tmp-builtin'
       hymofs:
-        description: 'HymoFS?'
+        description: '是否启用 HymoFS 相关补丁'
         required: true
         type: boolean
         default: 'false'
       kernelsu_author:
-        description: '署名这一块'
+        description: '内核版本署名大抵是'
         required: false
         type: string
         default: '@cctv18'
@@ -824,7 +824,7 @@ jobs:
             - ADIOS IO调度器支持：${{ github.event.inputs.adios_enable }}
             - Re-Kernel支持：${{ github.event.inputs.rekernel_enable }}
             - 内核级基带保护支持：${{ github.event.inputs.baseband_guard }}
-            - HymoFS: ${{ github.event.inputs.hymofs }}
+            - HymoFS支持: ${{ github.event.inputs.hymofs }}
             - SukiSU Ultra管理器下载：[SukiSU-Ultra](https://github.com/SukiSU-Ultra/SukiSU-Ultra/releases)
             - KernelSU Next管理器下载：[KernelSU-Next](https://github.com/KernelSU-Next/KernelSU-Next/releases)
             - MKSU管理器下载：[Magic-KernelSU](https://github.com/5ec1cff/KernelSU/actions)

@@ -224,7 +224,7 @@ jobs:
             # 创建版本定义模板&版本格式函数: 使用获取的提交哈希和固定后缀
             # KSU_VERSION_API: API 版本定义
             # KSU_VERSION_FULL: 完整版本定义
-            VERSION_DEFINITIONS=$'define get_ksu_version_full\nv\\$1-'"$GIT_COMMIT_HASH"$'${{ github.event.inputs.kernelsu_author }}\nendef\n\nKSU_VERSION_API := '"$KSU_API_VERSION"$'\nKSU_VERSION_FULL := v'"$KSU_API_VERSION"$'-'"$GIT_COMMIT_HASH"$'${{ github.event.inputs.kernelsu_author }}'
+            VERSION_DEFINITIONS=$'define get_ksu_version_full\nv\\$1-'"$GIT_COMMIT_HASH"$'${{ github.event.inputs.kernelsu_author }}\nendef\n\nKSU_VERSION_API := '"$KSU_API_VERSION"$'\nKSU_VERSION_FULL := \"v'"$KSU_API_VERSION"$'-'"$GIT_COMMIT_HASH"$'${{ github.event.inputs.kernelsu_author }}\"'
             # 清理内核 Kbuild 中的旧版本定义
             # 删除版本函数
             sed -i '/define get_ksu_version_full/,/endef/d' kernel/Kbuild
@@ -233,7 +233,7 @@ jobs:
             # 删除完整版本定义
             sed -i '/KSU_VERSION_FULL :=/d' kernel/Kbuild
             # 在 REPO_OWNER 行后插入新版本定义
-            awk -v def="\"$VERSION_DEFINITIONS\"" '
+            awk -v def="$VERSION_DEFINITIONS" '
               # 当找到 REPO_OWNER 行时，插入版本定义并设置标记
               /REPO_OWNER :=/ {print; print def; inserted=1; next}
               # 打印所有行

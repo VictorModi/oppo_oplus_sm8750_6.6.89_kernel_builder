@@ -186,7 +186,7 @@ jobs:
             ccache -sv
           fi
 
-      - name: 添加KernelSU
+      - name: 添加 KernelSU (${{ inputs.sukisu_branch }})
         id: ksu_version
         run: |
           # 进入内核工作目录

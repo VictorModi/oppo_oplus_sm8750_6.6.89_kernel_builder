@@ -581,7 +581,7 @@ jobs:
           echo "Applying HymoFS patch..."
           cd kernel_workspace
           PATCH_FILE="hymofs.patch"
-          HYMOFS_PATCH_HASH=$(git ls-remote https://github.com/Anatdx/HymoFS HEAD | awk '{print $1}')
+          HYMOFS_PATCH_HASH=$(git ls-remote https://github.com/Anatdx/HymoFS -b android15_6.6 | awk '{print $1}')
           echo "=============================="
           echo "🌟 Current HymoFS patch hash: ${HYMOFS_PATCH_HASH}"
           echo "=============================="

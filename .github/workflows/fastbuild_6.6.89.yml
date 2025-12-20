@@ -206,8 +206,6 @@ jobs:
             # 如果 target_commit_hash 不为空，则执行 sed 修改
             if [ -n "${{ github.event.inputs.target_commit_hash }}" ]; then
               sed -i "/git pull/ a\ git reset --hard ${{ github.event.inputs.target_commit_hash }}" setup.sh
-              echo "正在打印 setup.sh 内容"
-              cat setup.sh
             fi
             # 执行修改后的脚本
             bash setup.sh ${{ github.event.inputs.sukisu_branch }}

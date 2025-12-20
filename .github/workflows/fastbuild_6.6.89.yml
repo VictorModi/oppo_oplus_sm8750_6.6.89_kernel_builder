@@ -96,6 +96,11 @@ on:
           required: true
           type: boolean
           default: 'false'
+      target_commit_hash:
+          description: 'Target Commit Hash'
+          required: false
+          type: string
+          default: ''
 
 jobs:
   build:
@@ -197,7 +202,17 @@ jobs:
           cd kernel_workspace
           if [[ ${{ github.event.inputs.ksu_type }} == "sukisu" ]]; then
             echo "正在配置SukiSU Ultra..."
-            curl -LSs "https://raw.githubusercontent.com/${{ github.event.inputs.sukisu_repo_suffix }}/refs/heads/main/kernel/setup.sh" | bash -s ${{ github.event.inputs.sukisu_branch }}
+             curl -LSs "https://raw.githubusercontent.com/${{ github.event.inputs.sukisu_repo_suffix }}/refs/heads/main/kernel/setup.sh" -o setup.sh
+            # 如果 target_commit_hash 不为空，则执行 sed 修改
+            if [ -n "${{ github.event.inputs.target_commit_hash }}" ]; then
+              # 在 git clone 之后添加 git reset --hard <commit_hash>
+              sed -i "/git clone/ a\  git reset --hard ${{ github.event.inputs.target_commit_hash }}" setup.sh
+              echo "正在打印 setup.sh 内容"
+              cat setup.sh
+            fi
+            # 执行修改后的脚本
+            bash setup.sh ${{ github.event.inputs.sukisu_branch }}
+            rm -rf ./setup.sh
             cd ./KernelSU
             # 获取当前 Git 提交的短哈希 (8位)
             GIT_COMMIT_HASH=$(git rev-parse --short=8 HEAD)
@@ -812,6 +827,7 @@ jobs:
             - Re-Kernel支持：${{ github.event.inputs.rekernel_enable }}
             - 内核级基带保护支持：${{ github.event.inputs.baseband_guard }}
             - HymoFS支持: ${{ github.event.inputs.hymofs }}
+            - ZWSP Path Fix: ${{ github.event.inputs.fix_zwsp_enable }}
             - SukiSU Ultra管理器下载：[SukiSU-Ultra](https://github.com/SukiSU-Ultra/SukiSU-Ultra/releases)
             - KernelSU Next管理器下载：[KernelSU-Next](https://github.com/KernelSU-Next/KernelSU-Next/releases)
             - MKSU管理器下载：[Magic-KernelSU](https://github.com/5ec1cff/KernelSU/actions)

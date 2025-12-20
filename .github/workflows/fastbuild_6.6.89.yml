@@ -205,8 +205,7 @@ jobs:
              curl -LSs "https://raw.githubusercontent.com/${{ github.event.inputs.sukisu_repo_suffix }}/refs/heads/main/kernel/setup.sh" -o setup.sh
             # 如果 target_commit_hash 不为空，则执行 sed 修改
             if [ -n "${{ github.event.inputs.target_commit_hash }}" ]; then
-              # 在 git clone 之后添加 git reset --hard <commit_hash>
-              sed -i "/git clone/ a\  cd $GKI_ROOT/KernelSU && git reset --hard ${{ github.event.inputs.target_commit_hash }} && cd $GKI_ROOT" setup.sh
+              sed -i "/git pull/ a\ git reset --hard ${{ github.event.inputs.target_commit_hash }}" setup.sh
               echo "正在打印 setup.sh 内容"
               cat setup.sh
             fi

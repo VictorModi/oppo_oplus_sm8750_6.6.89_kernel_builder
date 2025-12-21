@@ -622,6 +622,29 @@ jobs:
           # patch -p1 < ../f2fs.patch
           grep use_hash fs/f2fs/dir.c
           patch -p1 < ../remove_ignore_init.patch
+          echo "重新编译 utf8data.c_shipped ..."
+          cd fs/unicode
+          sed -n '
+          /^Individual source links:/,/^md5sums/ {
+            s/^[[:space:]]*\(https[^[:space:]]*\)$/\1/p
+          }
+          ' README.utf8data | wget -i -
+          echo "对文件进行校验"
+          md5sum -c README.utf8data
+          echo "=============="
+          sha1sum -c README.utf8data
+          echo "=============="
+          echo "开始生成 utf8data "
+          echo "=============="
+          cd ../..
+          make REGENERATE_UTF8DATA=1 fs/unicode/
+          echo "=============="
+          echo "生成完成大抵上是 "
+          echo "=============="
+          cd fs/unicode
+          echo "对比 shipped 版本"
+          diff -q utf8data.c_shipped utf8data.c || echo "::warning::utf8data.c differs"
+          diff -q utf8data.h_shipped utf8data.h || echo "::warning::utf8data.h differs"
 
           
       - name: 添加制作名称

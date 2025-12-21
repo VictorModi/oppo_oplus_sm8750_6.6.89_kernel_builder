@@ -598,6 +598,7 @@ jobs:
           elif [ "${{ github.event.inputs.baseband_guard }}" = "random_deny" ]; then
             sed -i '1i #include <linux/random.h>' $BG_FILE
             sed -i 's/EPERM/({ int r = (prandom_u32() % 34) + 1; bb_pr_rl("chaos_deny: -%d\\n", r); r; })/g' $BG_FILE
+            echo "模式设定：随机返回错误"
           else
             echo "模式设定：保持默认 EPERM"
           fi

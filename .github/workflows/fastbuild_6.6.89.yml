@@ -115,21 +115,20 @@ jobs:
       ksuver: ${{ steps.ksu_version.outputs.ksuver }}
     steps:
       - name: 安装环境依赖+初始化源码仓库及llvm-Clang18工具链
+        env:
+          KSU_TYPE: ${{ github.event.inputs.ksu_type }}
         run: |
           rm -rf kernel_workspace
           mkdir kernel_workspace
           cd kernel_workspace
-          if [[ ${{ github.event.inputs.ksu_type }} == "sukisu" ]]; then
-            KSU_TYPENAME="SukiSU"
-          elif [[ ${{ github.event.inputs.ksu_type }} == "ksunext" ]]; then
-            KSU_TYPENAME="KSUNext"
-          elif [[ ${{ github.event.inputs.ksu_type }} == "mksu" ]]; then
-            KSU_TYPENAME="MKSU"
-          elif [[ ${{ github.event.inputs.ksu_type }} == "ksu" ]]; then
-            KSU_TYPENAME="KSU"
-          else
-            KSU_TYPENAME="Unknown"
-          fi
+          case "$KSU_TYPE" in
+            sukisu)  KSU_TYPENAME="SukiSU" ;;
+            ksunext) KSU_TYPENAME="KSUNext" ;;
+            mksu)    KSU_TYPENAME="MKSU" ;;
+            ksu)     KSU_TYPENAME="KSU" ;;
+            *)       KSU_TYPENAME="Unknown" ;;
+          esac
+          echo "KSU_TYPENAME=$KSU_TYPENAME" >> "$GITHUB_ENV"
           sudo apt-mark hold firefox &&
           sudo apt-mark hold libc-bin &&
           sudo apt purge man-db &&

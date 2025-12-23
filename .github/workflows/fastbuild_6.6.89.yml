@@ -78,7 +78,7 @@ on:
         description: '所使用的SukiSu Builtin分支'
         required: true
         type: choice
-        default: 'tmp-builtin'
+        default: 'builtin'
         options:
           - 'builtin'
           - 'tmp-builtin'
@@ -96,7 +96,7 @@ on:
         description: 'SukiSU仓库后缀(SukiSU-Ultra/SukiSU-Ultra)'
         required: false
         type: string
-        default: 'SukiSU-Ultra/SukiSU-Ultra'
+        default: 'ReSukiSU/ReSukiSU'
       fix_zwsp_bypass_enable:
           description: '内核层面修复ZWSP漏洞 (实验性)'
           required: true
@@ -812,7 +812,7 @@ jobs:
           if [[ "${{ github.event.inputs.lz4kd_enable }}" == "true" ]]; then
             wget https://raw.githubusercontent.com/cctv18/oppo_oplus_realme_sm8750/refs/heads/main/zram.zip
           fi
-          zip -r ../AnyKernel3_${env.KSU_TYPENAME}_${{ env.KSUVER }}_${{ env.KERNEL_VERSION }}_A15_${{ env.KERNEL_NAME }}.zip ./*
+          zip -r ../AnyKernel3_${{ env.KSU_TYPENAME }}_${{ env.KSUVER }}_${{ env.KERNEL_VERSION }}_A15_${{ env.KERNEL_NAME }}.zip ./*
 
       - name: 上传 ZIP 工件
         uses: actions/upload-artifact@v4

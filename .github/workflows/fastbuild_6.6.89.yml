@@ -211,7 +211,7 @@ jobs:
             ccache -sv
           fi
 
-      - name: 添加 ${{ github.event.inputs.ksu_type }} (${{ inputs.sukisu_branch }})${{ inputs.kernelsu_author }}
+      - name: 添加 ${{ env.KSU_TYPENAME }} (${{ inputs.sukisu_branch }})${{ inputs.kernelsu_author }}
         if: inputs.ksu_type != 'none'
         id: ksu_version
         run: |

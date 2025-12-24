@@ -836,6 +836,8 @@ jobs:
           path: ./release_zips
 
       - name: 设置环境变量
+        env:
+          KSU_TYPE: ${{ github.event.inputs.ksu_type }}
         run: |
           FULL_VERSION=${{ format('{0}.89-{1}', env.KERNEL_VERSION, env.KERNEL_NAME) }}
           echo "FULL_VERSION=$FULL_VERSION" >> $GITHUB_ENV
@@ -846,6 +848,14 @@ jobs:
           echo "TIME_FORM=$TIME_FORM" >> $GITHUB_ENV
           TAG_HEAD="OPPO+OPlus+Realme-A15-build"
           echo "TAG_HEAD=$TAG_HEAD" >> $GITHUB_ENV
+          case "$KSU_TYPE" in
+            sukisu)  KSU_TYPENAME="SukiSU" ;;
+            ksunext) KSU_TYPENAME="KSUNext" ;;
+            mksu)    KSU_TYPENAME="MKSU" ;;
+            ksu)     KSU_TYPENAME="KSU" ;;
+            *)       KSU_TYPENAME="Unknown" ;;
+          esac
+          echo "KSU_TYPENAME=$KSU_TYPENAME" >> "$GITHUB_ENV"
          
       - name: 创建发布
         id: create_release

@@ -77,11 +77,8 @@ on:
       sukisu_branch:
         description: '所使用的SukiSu Builtin分支'
         required: true
-        type: choice
+        type: string
         default: 'builtin'
-        options:
-          - 'builtin'
-          - 'tmp-builtin'
       hymofs:
         description: '是否启用 HymoFS 相关补丁'
         required: true

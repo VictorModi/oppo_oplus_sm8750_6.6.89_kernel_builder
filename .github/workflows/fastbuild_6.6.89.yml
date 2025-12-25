@@ -149,8 +149,8 @@ jobs:
 
           echo "正在克隆llvm-clang工具链..." &&
           mkdir -p clang &&
-          aria2c -s16 -x16 -k1M https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/android-16.0.0_r4/clang-r574158.tar.gz -o clang.zip &&
-          unzip -q clang.zip -d clang &&
+          aria2c -s16 -x16 -k1M https://github.com/VictorModi/VictorModi/releases/download/idk/clang-r574158.tar.gz -o clang.zip &&
+          tar -xzvf clang.zip -C clang &&
           rm -rf clang.zip &
           
           echo "正在克隆构建工具..." &&

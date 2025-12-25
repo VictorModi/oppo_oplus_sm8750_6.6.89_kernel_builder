@@ -116,7 +116,7 @@ jobs:
     outputs:
       ksuver: ${{ steps.ksu_version.outputs.ksuver }}
     steps:
-      - name: 安装环境依赖+初始化源码仓库及llvm-Clang18工具链
+      - name: 安装环境依赖+初始化源码仓库及llvm-Clang工具链
         env:
           KSU_TYPE: ${{ github.event.inputs.ksu_type }}
         run: |
@@ -147,10 +147,10 @@ jobs:
           mv "$TOP_DIR" common
           rm -f common.zip
 
-          echo "正在克隆llvm-clang18工具链..." &&
-          mkdir -p clang18 &&
-          aria2c -s16 -x16 -k1M https://github.com/cctv18/oneplus_sm8650_toolchain/releases/download/LLVM-Clang18-r510928/clang-r510928.zip -o clang.zip &&
-          unzip -q clang.zip -d clang18 &&
+          echo "正在克隆llvm-clang工具链..." &&
+          mkdir -p clang &&
+          aria2c -s16 -x16 -k1M https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/android-16.0.0_r4/clang-r574158.tar.gz -o clang.zip &&
+          unzip -q clang.zip -d clang &&
           rm -rf clang.zip &
           
           echo "正在克隆构建工具..." &&
@@ -159,7 +159,7 @@ jobs:
           rm -rf build-tools.zip &
           
           wait
-          echo "所有源码及llvm-Clang18工具链初始化完成！"
+          echo "所有源码及llvm-Clang工具链初始化完成！"
           echo "正在去除 ABI 保护 & 去除 dirty 后缀..."
           rm common/android/abi_gki_protected_exports_* || true
           for f in common/scripts/setlocalversion; do
@@ -709,9 +709,9 @@ jobs:
         run: |
           WORKDIR="$(pwd)"
           export PATH="/usr/lib/ccache:$PATH"
-          export PATH="$WORKDIR/kernel_workspace/clang18/bin:$PATH"
+          export PATH="$WORKDIR/kernel_workspace/clang/bin:$PATH"
           export PATH="$WORKDIR/kernel_workspace/build-tools/bin:$PATH"
-          CLANG_DIR="$WORKDIR/kernel_workspace/clang18/bin"
+          CLANG_DIR="$WORKDIR/kernel_workspace/clang/bin"
           CLANG_VERSION="$($CLANG_DIR/clang --version | head -n 1)"
           LLD_VERSION="$($CLANG_DIR/ld.lld --version | head -n 1)"
           echo "编译器信息:"

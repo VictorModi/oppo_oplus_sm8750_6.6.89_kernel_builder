@@ -788,7 +788,7 @@ jobs:
           sudo rm -rf /opt/hostedtoolcache/CodeQL &
           export KBUILD_BUILD_USER=kleaf
           export KBUILD_BUILD_HOST=build-host
-          export KBUILD_BUILD_TIMESTAMP="{{ github.event.inputs.build_time }}"
+          export KBUILD_BUILD_TIMESTAMP="${{ github.event.inputs.build_time }}"
           make -j$(nproc --all) LLVM=1 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- \
               CC="ccache clang" LD="ld.lld" HOSTLD=ld.lld O=out KCFLAGS+=-O2 \
               KCFLAGS+=-Wno-error gki_defconfig &&
